@@ -1,4 +1,5 @@
 import User from "../models/user.model.js";
+import sendJwtToken from "../utils/sendJwtToken.js";
 
 const register = async (req,res) => {
     try {
@@ -11,18 +12,8 @@ const register = async (req,res) => {
         }
 
         const user = await User.create({username,email,password});
+        sendJwtToken('Something went wrong !! Please try again',200,user,res);
 
-        if(!user){
-            return res.status(400).json({
-                success:false,
-                message:'Something went wrong !! Please try again'
-            })
-        }
-
-        return res.status(200).json({
-            success:true,
-            message:'user successfully registered !!'
-        })
     } catch (error) {
       res.status(500).json({
         success:false,
