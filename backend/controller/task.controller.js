@@ -13,7 +13,7 @@ const createTask = async (req, res) => {
     }
 
     try {
-        const task = await Task({
+        const task = await Task.create({
             title,
             description,
             dueDate,
@@ -39,8 +39,36 @@ const createTask = async (req, res) => {
     }
 };
 
-const getTasksForUser = (req,res) => {
+const getTasksForUser = async (req,res) => {
+   const {id} = req.user;
 
+   try {
+    if(!id){
+        return res.status(400).json({
+            success:false,
+            message:'something went wrong'
+        })
+    }
+    const tasks = await Task.findOne({assignedTo:id});
+ 
+    if(!tasks){
+      return res.status(400).json({
+         success:false,
+         message:'There is no tasks related to this user'
+      })
+    }
+ 
+    res.status(200).json({
+     success:true,
+     message:'successfully get all tasks related to user !!',
+     tasks:tasks
+    })
+   } catch (error) {
+    return res.status(500).json({
+        success:false,
+        message:error?.message
+    })
+   }
 }
 
 const getTaskById = (req,res) => {
