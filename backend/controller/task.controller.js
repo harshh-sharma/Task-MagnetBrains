@@ -136,14 +136,56 @@ const updateTask = async (req, res) => {
 
 
 const deleteTask = async (req,res) => {
-   
+   const {id} = req.params;
+   try {
+     const deletedTask = await Task.findByIdAndDelete(id);
+     
+     if(!deletedTask){
+        return res.status(401).json({
+            success:false,
+            message:'No task found related to this id'
+        })
+     }
+
+     return res.status(200).json({
+        success:false,
+        message:'Task deleted successfully !!'
+     })
+   } catch (error) {
+      return res.status(500).json({
+        success:true,
+        message:error?.message
+      })
+   }
 }
 
-const updateTaskStatus = async (req,res) => {
+const updateTaskStatus = async (req, res) => {
+    const {status} = req.body;
+    const {id} = req.params;
+    try {
+        const task = await Task.findByIdAndUpdate(
+            id,
+            { status },
+            { new: true }
+        );
 
+        if (!task){
+            return res.status(404).json({ message: 'Task not found' });
+        } 
 
+        res.status(200).json({
+            success:true,
+            message: 'Task status updated successfully',
+            task 
+        });
+    } catch (error) {
+        res.status(500).json({
+             success:false,
+             message:error?.message
+        });
+    }
+};
 
-}
 
 export {
     createTask,
