@@ -22,6 +22,36 @@ const register = async (req,res) => {
     }
 }
 
+const login = async (req,res) => {
+    try {
+       const {email,password} = req.body;
+       
+       if(!email || !password){
+         return res.status(400).json({
+            success:false,
+            message:'All fields are required'
+         });
+       }
+
+      const user = await User.findOne({email});
+      if(!user){
+        return res.status(400).json({
+            success:false,
+            message:'User are not registered'
+        })
+      }
+
+      sendJwtToken('user successfully loggedIn !!',200,user,res);
+
+    } catch (error) {
+        res.status(500).json({
+            success:false,
+            message:error.message
+          })  
+    }
+}
+
 export {
-    register
+    register,
+    login
 }
