@@ -84,9 +84,27 @@ const updateProfile = async () => {
  
 }
 
+const logout = (req,res) => {
+ try {
+   res.status(200).cookie("token", "", {
+     expires: new Date(Date.now()),
+     httpOnly:true
+ }).json({
+     success: true,
+     message: "user successfully logout"
+ })
+ } catch (error) {
+   return res.status(500).json({
+    success:false,
+    message:error.message
+   })
+ }
+}
+
 export {
     register,
     login,
     getProfile,
-    updateProfile
+    updateProfile,
+    logout
 }
