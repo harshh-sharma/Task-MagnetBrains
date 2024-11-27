@@ -71,8 +71,42 @@ const getTasksForUser = async (req,res) => {
    }
 }
 
-const getTaskById = (req,res) => {
+const getTaskById = async (req,res) => {
+   const {id} = req.params;
+   console.log("id",id);
+   
 
+   try {
+     if(!id){
+        return res.status(400).json({
+            success:false,
+            message:'something went wrong'
+        })
+     }
+
+     const task = await Task.findById(id);
+     console.log(task);
+     
+
+     if(!task){
+        return res.status(400).json({
+            success:false,
+            message:'No task related to this taskId'
+        })
+     }
+
+     res.status(200).json({
+        success:true,
+        message:'successfully get task by given id',
+        task
+     })
+
+   } catch (error) {
+      return res.status(500).json({
+        success:false,
+        message:error.message
+      })
+   }
 }
 
 const updateTask = async (req,res) => {
