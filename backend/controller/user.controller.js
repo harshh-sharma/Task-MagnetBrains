@@ -51,12 +51,37 @@ const login = async (req,res) => {
     }
 }
 
-const getProfile = async () => {
+const getProfile = async (req,res) => {
+  try {
+    const user = req.user;
+    console.log("uswr",user);
+    
+    if(!user){
+      return res.status(400).json({
+        success:false,
+        message:'user not found'
+      })
+    }
 
+    const findUserDetail = await User.findById(user.id);
+
+
+    res.status(200).json({
+      success:true,
+      message:'user profile successfully get',
+      user:findUserDetail
+    })
+    
+  } catch (error) {
+    return res.status(500).json({
+      success:false,
+      message:error.message
+    })
+  }
 }
 
 const updateProfile = async () => {
-
+ 
 }
 
 export {
