@@ -74,8 +74,6 @@ const getTasksForUser = async (req,res) => {
 const getTaskById = async (req,res) => {
    const {id} = req.params;
    console.log("id",id);
-   
-
    try {
      if(!id){
         return res.status(400).json({
@@ -109,12 +107,36 @@ const getTaskById = async (req,res) => {
    }
 }
 
-const updateTask = async (req,res) => {
+const updateTask = async (req, res) => {
+    const { title, description, dueDate, priority } = req.body;
+    const {id} = req.params;
+    try {
+        const task = await Task.findByIdAndUpdate(
+            id,
+            { title, description, dueDate, priority },
+            { new: true }
+        );
+        if (!task) return res.status(404).json({
+            success:false,
+             message: 'Task not found' 
+        });
 
-}
+        res.status(200).json({ 
+            success:true,
+            message: 'Task updated successfully', 
+            task 
+        });
+    } catch (error) {
+        res.status(500).json({ 
+            success:false,
+            message: error?.message
+        });
+    }
+};
+
 
 const deleteTask = async (req,res) => {
-
+   
 }
 
 const updateTaskStatus = async (req,res) => {
