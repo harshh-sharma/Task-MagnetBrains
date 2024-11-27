@@ -51,7 +51,17 @@ const login = async (req,res) => {
     }
 }
 
+const getProfile = async () => {
+
+}
+
+const updateProfile = async () => {
+
+}
+
 export {
     register,
-    login
+    login,
+    getProfile,
+    updateProfile
 }
