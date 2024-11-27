@@ -4,11 +4,15 @@ import './index.css'
 import App from './App.jsx'
 import { Provider } from 'react-redux'
 import appStore from './redux/store.js'
+import { BrowserRouter } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast';
+import './index.css';
 
 createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <Provider store={appStore}>
+  <Provider store={appStore}>
+  <BrowserRouter>
     <App />
-    </Provider>
-  </StrictMode>,
+    <Toaster />
+  </BrowserRouter>
+</Provider>
 )
