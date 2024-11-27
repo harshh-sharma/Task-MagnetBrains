@@ -1,6 +1,43 @@
-const createTask = async (req,res) => {
+import Task from "../models/task.model.js";
+import User from "../models/user.model.js";
 
-}
+const createTask = async (req, res) => {
+    const {id} = req.user;
+    const { title, description, dueDate, priority } = req.body;
+    
+    if(!title || !description || !dueDate || !priority){
+        return res.status(400).json({
+            success:false,
+            message:'All fields are required'
+        })
+    }
+
+    try {
+        const task = await Task({
+            title,
+            description,
+            dueDate,
+            priority,
+            assignedTo: id, 
+        });
+
+        // Add task to the user's task list
+        await User.findByIdAndUpdate(id, { $push: { tasks: task._id } });
+
+        return res.status(201).json(
+            {
+             success:true,
+             message: 'Task created successfully',
+             task 
+            }
+        );
+    } catch (error) {
+        res.status(500).json({ 
+                success:false, 
+                message:error?.message 
+            });
+    }
+};
 
 const getTasksForUser = (req,res) => {
 

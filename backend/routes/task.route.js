@@ -1,16 +1,16 @@
 import { Router } from "express";
-import isAuthenticated from "../middleware/auth.middleware";
-import { createTask, deleteTask, getTaskById, getTasksForUser, updateTask, updateTaskStatus } from "../controller/task.controller";
+import isAuthenticated from "../middleware/auth.middleware.js";
+import { createTask, deleteTask, getTaskById, getTasksForUser, updateTask, updateTaskStatus } from "../controller/task.controller.js";
 
 const taskRouter = Router();
 
-app.route('/').post(isAuthenticated,createTask)
+taskRouter.route('/').post(isAuthenticated,createTask)
               .get(isAuthenticated,getTasksForUser);
 
-app.route('/:id').get(isAuthenticated,getTaskById)
+taskRouter.route('/:id').get(isAuthenticated,getTaskById)
                 .put(isAuthenticated,updateTask)
                 .delete(isAuthenticated,deleteTask);
 
-app.route('/status/:id').post(updateTaskStatus);
+taskRouter.route('/status/:id').post(updateTaskStatus);
 
 export default taskRouter;
