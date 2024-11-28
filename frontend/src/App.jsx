@@ -5,12 +5,18 @@ import { Routes, Route, Router } from "react-router-dom";
 import './App.css'
 import './index.css';
 import Home from './pages/HomePage';
+import Login from './pages/LoginPage';
+import Register from './pages/RegisterPage';
+import Dashboard from './pages/Dashboard';
 
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
+      <Route path='/' element={<Home />} />
+      <Route path='/login' element={<Login/>} />
+      <Route path='/register' element={<Register/>} />
+      <Route path='/dashboard' element={<Dashboard/>}/>
     </Routes>
   )
 }

@@ -10,9 +10,16 @@ const register = async (req,res) => {
                 message:'All fields are required'
             })
         }
-
+        console.log("user",username,email,password);
+        
         const user = await User.create({username,email,password});
-        sendJwtToken('Something went wrong !! Please try again',200,user,res);
+        if(!user){
+          return res.status(400).json({
+            success:false,
+            message:'Something went wrong !! Please try again'
+          })
+        }
+        sendJwtToken('user registered successfully',200,user,res);
 
     } catch (error) {
       res.status(500).json({
