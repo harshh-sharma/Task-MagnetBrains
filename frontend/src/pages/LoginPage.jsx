@@ -2,19 +2,25 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../redux/slices/authSlice';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Importing eye icons
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false); // State to toggle password visibility
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-      const response = await dispatch(login({email,password}));
-      if(response?.payload?.success){
-        navigate('/dashboard');
-      }
+    const response = await dispatch(login({ email, password }));
+    if (response?.payload?.success) {
+      navigate('/dashboard');
+    }
+  };
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
   };
 
   return (
@@ -30,13 +36,22 @@ const Login = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4 px-4 py-3 rounded-lg text-white placeholder-gray-400 transition-all"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className="relative mb-4">
+            <input
+              type={passwordVisible ? 'text' : 'password'} // Toggle password visibility
+              placeholder="Password"
+              className="w-full bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none px-4 py-3 rounded-lg text-white placeholder-gray-400 transition-all"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={togglePasswordVisibility}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+            >
+              {passwordVisible ? <FaEyeSlash /> : <FaEye />} {/* Toggle eye icon */}
+            </button>
+          </div>
           <button
             type="submit"
             className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-all"

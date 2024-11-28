@@ -4,12 +4,15 @@ import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../redux/slices/authSlice';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Importing eye icons
 
 const Register = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false); // State to toggle password visibility
+  const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false); // State for confirm password visibility
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
@@ -41,12 +44,19 @@ const Register = () => {
         toast.error('Registration failed. Please try again.');
       }
     } catch (error) {
-        console.log('error',error);
-        
-    //   toast.error('An error occurred during registration.');
+      console.log('error', error);
+      toast.error('An error occurred during registration.');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setConfirmPasswordVisible(!confirmPasswordVisible);
   };
 
   return (
@@ -72,21 +82,43 @@ const Register = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <input
-            type="password"
-            placeholder="Password"
-            className="w-full bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4 px-4 py-3 rounded-lg text-white placeholder-gray-400 transition-all"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <input
-            type="password"
-            placeholder="Confirm Password"
-            className="w-full bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none mb-4 px-4 py-3 rounded-lg text-white placeholder-gray-400 transition-all"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-          
+
+          {/* Password field with eye icon */}
+          <div className="relative mb-4">
+            <input
+              type={passwordVisible ? 'text' : 'password'} // Toggle password visibility
+              placeholder="Password"
+              className="w-full bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none px-4 py-3 rounded-lg text-white placeholder-gray-400 transition-all"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={togglePasswordVisibility}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+            >
+              {passwordVisible ? <FaEyeSlash /> : <FaEye />} {/* Toggle eye icon */}
+            </button>
+          </div>
+
+          {/* Confirm Password field with eye icon */}
+          <div className="relative mb-4">
+            <input
+              type={confirmPasswordVisible ? 'text' : 'password'} // Toggle confirm password visibility
+              placeholder="Confirm Password"
+              className="w-full bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none px-4 py-3 rounded-lg text-white placeholder-gray-400 transition-all"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={toggleConfirmPasswordVisibility}
+              className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white"
+            >
+              {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />} {/* Toggle eye icon */}
+            </button>
+          </div>
+
           {/* Submit Button */}
           <button
             type="submit"
