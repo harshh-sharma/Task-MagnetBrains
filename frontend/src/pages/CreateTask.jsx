@@ -19,13 +19,17 @@ const CreateTask = () => {
     setIsSubmitting(true);
     try {
       const response = await dispatch(createTask({title, description, dueDate, priority}));
+
+      console.log('res------',response);
+      
       if(response?.payload?.success){
         navigate('/dashboard');
       }
     } catch (error) {
-      toast.error('Error creating task. Please try again.');
+    //   toast.error('Error creating task. Please try again.');
     } finally {
       setIsSubmitting(false);
+      navigate('/dashboard');
     }
   };
 

@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
-  const [visibleTasks, setVisibleTasks] = useState(10);
+  const [visibleTasks, setVisibleTasks] = useState(12);
   const tasks = useSelector((store) => store?.task?.tasks);
   const dispatch = useDispatch();
   const navigate = useNavigate();
