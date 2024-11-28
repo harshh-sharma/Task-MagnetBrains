@@ -3,6 +3,8 @@ import User from "../models/user.model.js";
 
 const createTask = async (req, res) => {
     const {id} = req.user;
+    console.log("isComin",id);
+    
     const { title, description, dueDate, priority } = req.body;
     
     if(!title || !description || !dueDate || !priority){
@@ -49,7 +51,7 @@ const getTasksForUser = async (req,res) => {
             message:'something went wrong'
         })
     }
-    const tasks = await Task.findOne({assignedTo:id});
+    const tasks = await Task.find({assignedTo:id});
  
     if(!tasks){
       return res.status(201).json({
@@ -149,7 +151,7 @@ const deleteTask = async (req,res) => {
      }
 
      return res.status(200).json({
-        success:false,
+        success:true,
         message:'Task deleted successfully !!'
      })
    } catch (error) {

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import Navbar from '../components/Navbar';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTasks } from '../redux/slices/taskSlice';
+import { getTasks, deleteTask } from '../redux/slices/taskSlice';
+import { FaEye, FaTrash, FaCheckCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { FaEye, FaTrash } from 'react-icons/fa';
+import Navbar from '../components/Navbar';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
@@ -14,7 +14,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        await dispatch(getTasks());
+        await dispatch(getTasks()); // Fetch tasks from the server
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -24,96 +24,110 @@ const Dashboard = () => {
     fetchTasks();
   }, [dispatch]);
 
-  if (loading)
-    return (
-      <div className="bg-gray-900 text-white flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid"></div>
-          <p className="mt-4 text-xl">Loading...</p>
-        </div>
-      </div>
-    );
+  const deleteTaskById = async (taskId) => {
+    if (window.confirm('Are you sure you want to delete this task?')) {
+      try {
+        await dispatch(deleteTask(taskId)); // Delete task
+        await dispatch(getTasks()); // Refresh tasks after deletion
+      } catch (error) {
+        console.error('Error deleting task:', error);
+      }
+    }
+  };
+
+  const updateTaskStatusById = async (taskId, status) => {
+    try {
+      // await dispatch(updateTaskStatus({ taskId, status }));
+      await dispatch(getTasks()); // Refresh task list after status change
+    } catch (error) {
+      console.error('Error updating task status:', error);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-GB'); // Formats date as dd-mm-yyyy
+  };
+
+  if (loading) return <div className="text-center text-white">Loading...</div>;
 
   return (
-    <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 min-h-screen text-white">
+    <div className="min-h-screen bg-gray-900 text-white">
+      {/* Navbar */}
       <Navbar />
-      <main className="p-4 sm:p-6 md:p-8">
-        {/* Header Section */}
-        {tasks && tasks.length > 0 && (
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-wide text-center sm:text-left">
-              Welcome to Your Tasks
-            </h1>
-            <button
-              onClick={() => navigate('/task/create')}
-              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-4 sm:px-6 py-3 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-200 w-full sm:w-auto"
-            >
-              Create Task
-            </button>
-          </div>
-        )}
 
-        {/* Tasks Section */}
-        {tasks && tasks.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
-            {tasks.map((task) => (
-              <div
-                key={task._id}
-                className={`bg-gray-800 p-4 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-200 border-l-4 ${
-                  task.priority === 'High'
-                    ? 'border-red-500'
-                    : task.priority === 'Medium'
-                    ? 'border-yellow-500'
-                    : 'border-green-500'
-                }`}
-              >
-                <h3 className="text-md sm:text-lg font-bold mb-2 truncate">{task.title}</h3>
-                <p className="text-sm text-gray-400 mb-3 line-clamp-2">{task.description}</p>
-                <div className="flex justify-between items-center">
-                  <span
-                    className={`text-xs font-semibold ${
-                      task.status === 'Completed' ? 'text-green-500' : 'text-yellow-500'
-                    }`}
-                  >
-                    {task.status}
-                  </span>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => alert(`View Task ${task._id}`)}
-                      className="text-blue-500 hover:text-blue-600 text-lg"
-                      title="View Task"
-                    >
-                      <FaEye />
-                    </button>
-                    <button
-                      onClick={() => alert(`Delete Task ${task._id}`)}
-                      className="text-red-500 hover:text-red-600 text-lg"
-                      title="Delete Task"
-                    >
-                      <FaTrash />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center mt-16">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-300 mb-4">
-              No tasks found!
-            </h2>
-            <p className="text-gray-400 mb-6 sm:mb-8">
-              It looks like you don’t have any tasks yet.
-            </p>
-            <button
-              onClick={() => navigate('/task/create')}
-              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-200"
+      <div className="p-6">
+        {/* Header Section */}
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-4xl font-semibold text-center text-white">Your Tasks</h1>
+          {/* Create Task Button */}
+          <button
+            onClick={() => navigate('/task/create')}
+            className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg transition duration-300"
+          >
+            Create New Task
+          </button>
+        </div>
+
+        {/* Task Cards Section */}
+        <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {tasks.map((task) => (
+            <div
+              key={task._id}
+              className={`bg-gray-800 p-6 rounded-xl shadow-lg border-l-8 transition-transform transform hover:scale-105 hover:shadow-xl ${
+                task.priority === 'High'
+                  ? 'border-red-500'
+                  : task.priority === 'Medium'
+                  ? 'border-yellow-500'
+                  : 'border-green-500'
+              }`}
             >
-              Create Your First Task
-            </button>
-          </div>
-        )}
-      </main>
+              <h3 className="text-2xl font-semibold text-white truncate mb-3">{task.title}</h3>
+              <p className="text-sm text-gray-400 line-clamp-3 mb-3">{task.description}</p>
+              <p className="text-xs text-gray-500 mb-3">Due: {formatDate(task.dueDate)}</p>
+              <p
+                className={`text-xs ${
+                  task.status === 'Completed' ? 'text-green-400' : 'text-yellow-500'
+                } mb-4`}
+              >
+                {task.status}
+              </p>
+
+              {/* Action Buttons */}
+              <div className="flex justify-between items-center mt-4">
+                {/* View Task */}
+                <button
+                  onClick={() => navigate(`/task/${task._id}`)}
+                  className="text-blue-400 hover:text-blue-500 transition duration-300"
+                  title="View Task Details"
+                >
+                  <FaEye size={20} />
+                </button>
+
+                {/* Delete Task */}
+                <button
+                  onClick={() => deleteTaskById(task._id)}
+                  className="text-red-400 hover:text-red-500 transition duration-300"
+                  title="Delete Task"
+                >
+                  <FaTrash size={20} />
+                </button>
+
+                {/* Mark as Completed */}
+                {task.status !== 'Completed' && (
+                  <button
+                    onClick={() => updateTaskStatusById(task._id, 'Completed')}
+                    className="text-green-400 hover:text-green-500 transition duration-300"
+                    title="Mark as Completed"
+                  >
+                    <FaCheckCircle size={20} />
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
