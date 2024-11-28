@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { logout } from '../redux/slices/authSlice';
+import { GiHamburgerMenu } from "react-icons/gi";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -22,9 +23,12 @@ const Navbar = () => {
           Task Manager
         </Link>
 
-        <div className="hidden md:flex items-center space-x-6">
-          <Link to="/dashboard" className="hover:text-gray-300">
+        <div className="hidden md:flex items-center space-x-8">
+          <Link to="/dashboard" className="hover:text-gray-300 text-xl font-semibold">
             Dashboard
+          </Link>
+          <Link to="/profile" className="hover:text-gray-300 text-xl font-semibold">
+            Profile
           </Link>
           <button
             onClick={handleLogout}
@@ -39,15 +43,18 @@ const Navbar = () => {
           className="md:hidden focus:outline-none"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          <span className="material-icons text-white">menu</span>
+          <span className="material-icons text-white"><GiHamburgerMenu/></span>
         </button>
       </div>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
         <div className="mt-4 md:hidden flex flex-col space-y-4">
-          <Link to="/dashboard" className="hover:text-gray-300">
+          <Link to="/dashboard" className="hover:text-gray-300 font-semibold">
             Dashboard
+          </Link>
+          <Link to="/profile" className="hover:text-gray-300 font-semibold">
+            Profile
           </Link>
           <button
             onClick={handleLogout}

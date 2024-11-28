@@ -60,7 +60,7 @@ const Dashboard = () => {
       <div className="p-6">
         {/* Header Section */}
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-4xl font-semibold text-center text-white">Your Tasks</h1>
+          <h1 className="text-2xl font-semibold text-center text-white">Your Tasks</h1>
           {/* Create Task Button */}
           <motion.button
             onClick={() => navigate('/task/create')}
@@ -86,7 +86,7 @@ const Dashboard = () => {
               }`}
               whileHover={{ scale: 1.03 }}
             >
-              <h3 className="text-2xl font-semibold text-white truncate mb-3">{task.title}</h3>
+              <h3 className="text-xl font-semibold text-white truncate mb-3">{task.title}</h3>
               <p className="text-sm text-gray-400 line-clamp-3 mb-3">{task.description}</p>
               <p className="text-xs text-gray-500 mb-3">Due: {formatDate(task.dueDate)}</p>
               <p
