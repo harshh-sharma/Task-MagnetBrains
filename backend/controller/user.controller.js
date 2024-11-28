@@ -102,9 +102,47 @@ const getProfile = async (req,res) => {
   }
 }
 
-const updateProfile = async () => {
- 
-}
+const updateProfile = async (req, res) => {
+  const { name } = req.body;
+  const { id } = req.user;
+
+  console.log("Updating user:", { id, name });
+
+  try {
+    if (!name) {
+      return res.status(400).json({
+        success: false,
+        message: "Name is required to update the profile.",
+      });
+    }
+
+    const user = await User.findByIdAndUpdate(
+      id,
+      { username:name },
+      { new: true, runValidators: true }
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found. Update failed.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "User profile successfully updated.",
+      user,
+    });
+  } catch (error) {
+    console.error("Error updating user profile:", error);
+    return res.status(500).json({
+      success: false,
+      error: error.message,
+    });
+  }
+};
+
 
 const logout = (req,res) => {
  try {

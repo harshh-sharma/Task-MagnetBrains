@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { } from '../redux/slices/authSlice'; // Action to update user data
+import { updateUser } from '../redux/slices/authSlice'; // Action to update user data
 import toast from 'react-hot-toast';
 import Navbar from '../components/Navbar';
 import { FaUserCircle } from "react-icons/fa";
@@ -16,8 +16,7 @@ const ProfilePage = () => {
       toast.error('Name cannot be empty!');
       return;
     }
-    // dispatch(updateUserAction({ username: newName })); // Update name in Redux state
-    toast.success('Name updated successfully!');
+    dispatch(updateUser({ name: newName }));
     setIsEditing(false);
   };
 
