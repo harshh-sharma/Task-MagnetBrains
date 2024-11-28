@@ -41,7 +41,9 @@ const Register = () => {
         toast.error('Registration failed. Please try again.');
       }
     } catch (error) {
-      toast.error('An error occurred during registration.');
+        console.log('error',error);
+        
+    //   toast.error('An error occurred during registration.');
     } finally {
       setIsLoading(false);
     }

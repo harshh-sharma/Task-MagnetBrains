@@ -32,7 +32,9 @@ export const login = createAsyncThunk("/user/login",async(data) => {
           });
         return (await response).data
     } catch (error) {
+        console.log('error',error);
         toast.error(error?.response?.data?.message);
+        
     }
 })
 

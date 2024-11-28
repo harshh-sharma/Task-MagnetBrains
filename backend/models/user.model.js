@@ -37,5 +37,9 @@ userSchema.methods.generateJWTToken = function(){
     );
 }
 
+userSchema.methods.correctPassword = async function(password){
+    return await bcrypt.compare(password,this.password);
+}
+
 const User = mongoose.model('User',userSchema);
 export default User;

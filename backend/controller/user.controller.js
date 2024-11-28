@@ -10,7 +10,14 @@ const register = async (req,res) => {
                 message:'All fields are required'
             })
         }
-        console.log("user",username,email,password);
+       
+        const isEmailExists = await User.findOne({email});
+        if(isEmailExists){
+          return res.status(401).json({
+            success:false,
+            message:"email is already registered"
+          })
+        }
         
         const user = await User.create({username,email,password});
         if(!user){
@@ -40,13 +47,21 @@ const login = async (req,res) => {
          });
        }
 
-      const user = await User.findOne({email});
+       const user = await User.findOne({ email }).select("+password");
       if(!user){
         return res.status(400).json({
             success:false,
             message:'User are not registered'
         })
       }
+
+      const isCorrectPassword = await user.correctPassword(password);
+        if (!isCorrectPassword) {
+            return res.status(400).json({
+                success: false,
+                message: "Password is incorrect"
+            })
+        }
 
       sendJwtToken('user successfully loggedIn !!',200,user,res);
 
