@@ -81,16 +81,14 @@ const TaskDetail = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-800 to-black text-white p-6 sm:p-8">
-      {/* Back Button */}
       <button
-        onClick={() => navigate('/')}
+        onClick={() => navigate('/dashboard')}
         className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg mb-6 flex items-center transition ease-in-out duration-300"
       >
         <FaArrowLeft className="mr-3" size={18} />
         Back to Dashboard
       </button>
 
-      {/* Task Detail Card */}
       <div className="max-w-5xl mx-auto bg-gray-900 p-6 sm:p-10 rounded-3xl shadow-xl transform transition-all duration-300 hover:scale-105">
         <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
           {isEditing ? (
@@ -105,11 +103,9 @@ const TaskDetail = () => {
           )}
         </h2>
 
-        {/* Due Date & Status Section */}
         <div className="mb-8 flex flex-col sm:flex-row sm:justify-between text-lg">
           <p className="text-gray-400">Due Date: <span className="font-semibold text-white">{formattedDueDate}</span></p>
           <div className="flex items-center space-x-2">
-            {/* Editable Status Dropdown */}
             <select
               value={status}
               onChange={handleStatusChange}
@@ -135,7 +131,6 @@ const TaskDetail = () => {
           </div>
         </div>
 
-        {/* Description Section */}
         <div className="mb-8">
           <h3 className="text-xl font-medium text-white mb-3">Description</h3>
           <div className={`text-lg text-gray-300 ${task.description.length > 100 ? 'max-h-40 overflow-y-auto' : ''}`}>
@@ -151,7 +146,6 @@ const TaskDetail = () => {
           </div>
         </div>
 
-        {/* Task Details Section */}
         <div className="space-y-4 mb-6">
           <h3 className="text-xl font-semibold text-white">Task Details</h3>
           <ul className="text-gray-300">
@@ -175,7 +169,6 @@ const TaskDetail = () => {
           </ul>
         </div>
 
-        {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row justify-between mt-8">
           {isEditing ? (
             <>

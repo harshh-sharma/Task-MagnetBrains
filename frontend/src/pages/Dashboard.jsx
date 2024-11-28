@@ -75,7 +75,7 @@ const Dashboard = () => {
         </div>
 
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {tasks.slice(0, visibleTasks).map((task) => (
+          {tasks?.length > 0 &&  tasks.slice(0, visibleTasks).map((task) => (
             <motion.div
               key={task._id}
               className={`bg-gray-800 p-6 rounded-xl shadow-lg border-l-8 transform transition-all duration-300 hover:scale-105 hover:shadow-xl ${
