@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getTasks, deleteTask } from '../redux/slices/taskSlice';
+import { getTasks, deleteTask, updateTaskStatus } from '../redux/slices/taskSlice';
 import { FaEye, FaTrash, FaCheckCircle } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
@@ -8,6 +8,7 @@ import { motion } from 'framer-motion';
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);
+  const [visibleTasks, setVisibleTasks] = useState(10);
   const tasks = useSelector((store) => store?.task?.tasks);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        await dispatch(getTasks()); // Fetch tasks from the server
+        await dispatch(getTasks());
         setLoading(false);
       } catch (error) {
         console.error(error);
@@ -28,18 +29,18 @@ const Dashboard = () => {
   const deleteTaskById = async (taskId) => {
     if (window.confirm('Are you sure you want to delete this task?')) {
       try {
-        await dispatch(deleteTask(taskId)); // Delete task
-        await dispatch(getTasks()); // Refresh tasks after deletion
+        await dispatch(deleteTask(taskId));
+        await dispatch(getTasks());
       } catch (error) {
         console.error('Error deleting task:', error);
       }
     }
   };
 
-  const updateTaskStatusById = async (taskId, status) => {
+  const updateTaskStatusById = async (id, status) => {
     try {
-      // await dispatch(updateTaskStatus({ taskId, status }));
-      await dispatch(getTasks()); // Refresh task list after status change
+      await dispatch(updateTaskStatus({ id, status }));
+      await dispatch(getTasks());
     } catch (error) {
       console.error('Error updating task status:', error);
     }
@@ -47,21 +48,22 @@ const Dashboard = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-GB'); // Formats date as dd-mm-yyyy
+    return date.toLocaleDateString('en-GB');
+  };
+
+  const loadMoreTasks = () => {
+    setVisibleTasks((prev) => prev + 10);
   };
 
   if (loading) return <div className="text-center text-white">Loading...</div>;
 
   return (
     <div className="min-h-screen bg-darkBackground text-white">
-      {/* Navbar */}
       <Navbar />
 
       <div className="p-6">
-        {/* Header Section */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-semibold text-center text-white">Your Tasks</h1>
-          {/* Create Task Button */}
           <motion.button
             onClick={() => navigate('/task/create')}
             className="bg-primary hover:bg-indigo-700 text-white py-2 px-6 rounded-lg shadow-md transform transition-transform duration-300 hover:scale-105"
@@ -72,9 +74,8 @@ const Dashboard = () => {
           </motion.button>
         </div>
 
-        {/* Task Cards Section */}
         <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {tasks.map((task) => (
+          {tasks.slice(0, visibleTasks).map((task) => (
             <motion.div
               key={task._id}
               className={`bg-gray-800 p-6 rounded-xl shadow-lg border-l-8 transform transition-all duration-300 hover:scale-105 hover:shadow-xl ${
@@ -97,9 +98,7 @@ const Dashboard = () => {
                 {task.status}
               </p>
 
-              {/* Action Buttons */}
               <div className="flex justify-between items-center mt-4">
-                {/* View Task */}
                 <motion.button
                   onClick={() => navigate(`/task/${task._id}`)}
                   className="text-primary hover:text-blue-500 transition duration-300"
@@ -109,7 +108,6 @@ const Dashboard = () => {
                   <FaEye size={20} />
                 </motion.button>
 
-                {/* Delete Task */}
                 <motion.button
                   onClick={() => deleteTaskById(task._id)}
                   className="text-danger hover:text-red-500 transition duration-300"
@@ -119,7 +117,6 @@ const Dashboard = () => {
                   <FaTrash size={20} />
                 </motion.button>
 
-                {/* Mark as Completed */}
                 {task.status !== 'Completed' && (
                   <motion.button
                     onClick={() => updateTaskStatusById(task._id, 'Completed')}
@@ -134,6 +131,19 @@ const Dashboard = () => {
             </motion.div>
           ))}
         </div>
+
+        {visibleTasks < tasks.length && (
+          <div className="flex justify-center mt-6">
+            <motion.button
+              onClick={loadMoreTasks}
+              className="bg-primary hover:bg-indigo-700 text-white py-2 px-6 rounded-lg shadow-md transform transition-transform duration-300 hover:scale-105"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              Load More
+            </motion.button>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -87,6 +87,22 @@ export const updateTaskDetails = createAsyncThunk('/task/Id',async(data) => {
     }
 })
 
+export const updateTaskStatus = createAsyncThunk('/task/Id',async({id,status}) => {
+    try {
+       const response = axiosInstance.post(`/task/status/${id}`,{status:status});
+
+       toast.promise(response,{
+        loading:"Wait !! while updating your task status",
+        success:(data) => {
+            return data?.data?.message;
+        },
+        error:"Failed to update task status"
+    })
+    } catch (error) {
+        toast.error(error?.response?.data?.message);
+    }
+})
+
 const taskSlice = createSlice({
     name:"task",
     initialState:{
