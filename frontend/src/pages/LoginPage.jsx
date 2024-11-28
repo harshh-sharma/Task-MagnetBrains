@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { login } from '../redux/slices/authSlice';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -10,11 +11,10 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      navigate('/dashboard');
-    } catch (error) {
-      alert('Login failed. Please check your credentials.');
-    }
+      const response = await dispatch(login({email,password}));
+      if(response?.payload?.success){
+        navigate('/dashboard');
+      }
   };
 
   return (

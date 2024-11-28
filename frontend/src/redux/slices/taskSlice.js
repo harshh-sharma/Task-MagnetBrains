@@ -54,6 +54,39 @@ export const deleteTask = createAsyncThunk("/task/taskId",async(taskId) => {
     }
 })
 
+export const getTaskDetails = createAsyncThunk("/task/taskId",async(taskId) => {
+    try {
+        const res = axiosInstance.get(`/task/${taskId}`);
+        toast.promise(res,{
+            loading:"Wait !! while getting your task details",
+            success:(data) => {
+                return data?.data?.message;
+            },
+            error:"Failed to get task detail"
+        })
+        return (await res).data;
+    } catch (error) {
+        toast.error(error?.response?.data?.message);
+    }
+})
+
+export const updateTaskDetails = createAsyncThunk('/task/Id',async(data) => {
+    try {
+        const {id,task} = data;
+        
+       const response = axiosInstance.put(`/task/${id}`,task);
+       toast.promise(response,{
+        loading:"Wait !! while updating your task",
+        success:(data) => {
+            return data?.data?.message;
+        },
+        error:"Failed to update task"
+    })
+    } catch (error) {
+        toast.error(error?.response?.data?.message);
+    }
+})
+
 const taskSlice = createSlice({
     name:"task",
     initialState:{

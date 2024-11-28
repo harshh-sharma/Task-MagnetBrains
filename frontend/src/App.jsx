@@ -9,6 +9,7 @@ import Login from './pages/LoginPage';
 import Register from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
 import CreateTask from './pages/CreateTask';
+import TaskDetail from './pages/TaskDetailPage';
 
 
 
@@ -20,6 +21,7 @@ function App() {
       <Route path='/register' element={<Register/>} />
       <Route path='/dashboard' element={<Dashboard/>}/>
       <Route path='/task/create' element={<CreateTask/>}/>
+      <Route path='/task/:id' element={<TaskDetail/>}/>
     </Routes>
   )
 }

@@ -18,7 +18,7 @@ const CreateTask = () => {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      const response = await dispatch(createTask({title,description,dueDate,priority}));
+      const response = await dispatch(createTask({title, description, dueDate, priority}));
       if(response?.payload?.success){
         navigate('/dashboard');
       }
@@ -30,7 +30,7 @@ const CreateTask = () => {
   };
 
   return (
-    <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-700 min-h-screen text-white">
+    <div className="bg-darkBackground min-h-screen text-white">
       <Navbar />
       <div className="max-w-xl mx-auto p-6">
         <h1 className="text-4xl font-extrabold text-center text-white mb-8">Create New Task</h1>
@@ -42,14 +42,14 @@ const CreateTask = () => {
             <input
               type="text"
               placeholder="Task Title"
-              className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border-2 border-gray-600 focus:border-blue-500 focus:outline-none transition-all duration-300 text-lg"
+              className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border-2 border-gray-600 focus:border-primary focus:outline-none transition-all duration-300 text-lg"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
             />
             <textarea
               placeholder="Description"
-              className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border-2 border-gray-600 focus:border-blue-500 focus:outline-none transition-all duration-300 text-lg"
+              className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border-2 border-gray-600 focus:border-primary focus:outline-none transition-all duration-300 text-lg"
               rows="4"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -57,13 +57,13 @@ const CreateTask = () => {
             />
             <input
               type="date"
-              className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border-2 border-gray-600 focus:border-blue-500 focus:outline-none transition-all duration-300"
+              className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border-2 border-gray-600 focus:border-primary focus:outline-none transition-all duration-300"
               value={dueDate}
               onChange={(e) => setDueDate(e.target.value)}
               required
             />
             <select
-              className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border-2 border-gray-600 focus:border-blue-500 focus:outline-none transition-all duration-300"
+              className="w-full bg-gray-700 text-white px-4 py-3 rounded-lg border-2 border-gray-600 focus:border-primary focus:outline-none transition-all duration-300"
               value={priority}
               onChange={(e) => setPriority(e.target.value)}
             >
@@ -76,7 +76,7 @@ const CreateTask = () => {
           <button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-indigo-600 hover:to-blue-500 text-white py-3 rounded-lg transform hover:scale-105 transition-all duration-300 text-lg ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
+            className={`w-full bg-gradient-to-r from-primary to-indigo-600 hover:from-indigo-600 hover:to-primary text-white py-3 rounded-lg transform hover:scale-105 transition-all duration-300 text-lg ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
           >
             {isSubmitting ? (
               <div className="flex justify-center items-center">

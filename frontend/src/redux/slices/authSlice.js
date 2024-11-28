@@ -5,16 +5,48 @@ import axiosInstance from "../../helper/axiosInstance";
 
 export const register = createAsyncThunk("/user/register",async(data) => {
     try {
-        const res = axiosInstance.post("user/register",data);
-        toast.promise(res,{
+        const response = axiosInstance.post("user/register",data);
+        toast.promise(response,{
             loading:"Wait !! creating your account",
             success:(data) => {
-                // console.log("dat",data);
                 return data?.data?.message;
             },
             error:"Failed to create account"
         })
-        return (await res).data
+        return (await response).data
+    } catch (error) {
+        toast.error(error?.response?.data?.message);
+    }
+})
+
+export const login = createAsyncThunk("/user/login",async(data) => {
+    try {
+        const response = axiosInstance.post("user/login",data);
+        toast.promise(response, {
+            loading: 'Wait while we validate...',
+            success: (data) => {
+              console.log('Login successful:', data);
+              return data?.data?.message || 'Login successful';
+            },
+            error: 'Failed to login. Please check your credentials.'
+          });
+        return (await response).data
+    } catch (error) {
+        toast.error(error?.response?.data?.message);
+    }
+})
+
+export const logout = createAsyncThunk("/user/logout",async() => {
+    try {
+        const response = axiosInstance.get("/user/logout");
+        toast.promise(response,{
+            loading:"wait !! while logged out",
+            success:(data) => {
+                return data?.data?.message;
+            },
+            error:"Failed to logout"
+        })
+        return (await response).data
     } catch (error) {
         toast.error(error?.response?.data?.message);
     }
@@ -35,6 +67,19 @@ const authSlice = createSlice({
            
             state.isLoggedIn = true,
             state.data = JSON.parse(JSON.stringify(action?.payload?.user));
+        })
+        .addCase(login.fulfilled,(state,action) => {
+            localStorage.setItem("data",JSON.stringify(action?.payload?.user));
+            localStorage.setItem("isLoggedIn",true);
+           
+            state.isLoggedIn = true,
+            state.data = JSON.parse(JSON.stringify(action?.payload?.user));
+        })
+        .addCase(logout.fulfilled,(state,action) => {
+            state.data = {};
+            state.isLoggedIn = false,
+            state.role = ""
+            localStorage.clear();
         })
         
     }
