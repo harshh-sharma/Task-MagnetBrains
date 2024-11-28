@@ -1,24 +1,27 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { logout } from '../redux/slices/authSlice';
 
 const Navbar = () => {
+  const dispatch = useDispatch();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
+  const handleLogout = async() => {
+    const response = await dispatch(logout());
+    if(response?.payload?.success){
+      navigate('/');
+    }
   };
 
   return (
     <nav className="bg-gray-800 text-white py-4 px-6">
       <div className="flex justify-between items-center">
-        {/* Brand Logo */}
         <Link to="/dashboard" className="text-2xl font-bold text-primary hover:text-indigo-500">
           Task Manager
         </Link>
 
-        {/* Desktop Links */}
         <div className="hidden md:flex items-center space-x-6">
           <Link to="/dashboard" className="hover:text-gray-300">
             Dashboard
