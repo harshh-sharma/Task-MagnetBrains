@@ -52,9 +52,10 @@ const getTasksForUser = async (req,res) => {
     const tasks = await Task.findOne({assignedTo:id});
  
     if(!tasks){
-      return res.status(400).json({
+      return res.status(201).json({
          success:false,
-         message:'There is no tasks related to this user'
+         message:'There is no tasks related to this user',
+         tasks:[]
       })
     }
  

@@ -8,6 +8,8 @@ import Home from './pages/HomePage';
 import Login from './pages/LoginPage';
 import Register from './pages/RegisterPage';
 import Dashboard from './pages/Dashboard';
+import CreateTask from './pages/CreateTask';
+
 
 
 function App() {
@@ -17,6 +19,7 @@ function App() {
       <Route path='/login' element={<Login/>} />
       <Route path='/register' element={<Register/>} />
       <Route path='/dashboard' element={<Dashboard/>}/>
+      <Route path='/task/create' element={<CreateTask/>}/>
     </Routes>
   )
 }
